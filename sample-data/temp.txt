@@ -1,0 +1,701 @@
+{\rtf1\ansi\ansicpg1252\cocoartf2870
+\cocoatextscaling0\cocoaplatform0{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww11520\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \{\
+    "id": 6151,\
+    "title": "Saudi Arabia Cement Plant",\
+    "subtitle": null,\
+    "description": "System Description  \nThis system models a modern cement manufacturing plant located in Saudi Arabia, producing four distinct   \ncement products: CEM I (Ordinary Portland Cement), CEM II/A-V (Pozzolana Cement), CEM II/B-S (Slag Cement),   \nand Masonry Cement. The functional unit is 1 kg of each finished cement product at the factory gate. The system   \nboundary is cradle-to-gate, covering raw material extraction, processing, clinker production, and cement   \ngrinding. Transportation to customer and end-of-life are excluded.  \nThe plant is a modern dry-process facility with a five-stage preheater/precalciner kiln system. Annual clinker   \ncapacity is approximately 1.5 million tonnes per year. The kiln burns heavy fuel oil (HFO) as primary fuel, which is   \nstandard for Saudi operations due to subsidized Aramco supply.  \nProcess Description  \nRaw Material Preparation: Limestone is quarried from adjacent deposits (5\'9615 km from the plant) in the Najd   \nplateau or Al-Hasa region. Clay/shale is sourced domestically within 50 km. Both are crushed, proportioned, and   \nground in a vertical roller mill (VRM) to produce raw meal. Gypsum is mined domestically from Hejaz or Najd   \ndeposits.  \nClinker Production: Raw meal is fed to a five-stage preheater tower with precalciner, then enters a rotary kiln   \noperating at approximately 1,450\'b0C. Heavy fuel oil is the kiln fuel. The calcination of limestone (CaCO\uc0\u8323   CaO +   \nCO\u8322 ) releases approximately 525 kg CO\u8322  per tonne of clinker as process emissions. The burned clinker is cooled   \nin a grate cooler and stored in silos.  \nCement Grinding: Clinker is blended with gypsum and supplementary cementitious materials (SCMs) depending   \non the product type, then ground in a VRM cement mill to the target fineness (Blaine specific surface area   \ntypically 3,200\'964,000 cm\'b2/g). Finished cement is stored in silos for dispatch.  \nProducts and Clinker Ratios  \nCEM I (OPC): 95% clinker + 5% gypsum. Standard structural cement per EN 197-1.  \nCEM II/A-V (Pozzolana): 75% clinker + 20% natural pozzolan + 5% gypsum. Pozzolan sourced from Harrat volcanic   \nfields in western Saudi Arabia, or imported from Jordan/Turkey (500\'961,500 km by sea + road).  \nCEM II/B-S (Slag): 70% clinker + 25% ground granulated blast furnace slag (GGBS) + 5% gypsum. GGBS is   \nimported from UAE (Emirates Steel), Bahrain (Alba), or Egypt (Ezz Steel) via sea freight to Dammam/Jeddah port.  \nMasonry Cement: 60% clinker + 35% limestone filler + 5% gypsum. Limestone filler sourced from the same   \nquarry as kiln feed.  \nClinker production requires approximately 1,050 kg limestone + 250 kg clay per 1,000 kg clinker, plus 80 kg HFO   \nas kiln fuel. Electricity consumption is approximately 110 kWh per tonne of cement (grinding + auxiliaries) from   \nthe Saudi grid.  \n\nBill of Materials (per 1,000 kg of each cement product)  \nInput Material CEM I (kg) CEM II/A-V (kg) CEM II/B-S (kg) Masonry (kg)  \nClinker 950 750 700 600\nGypsum 50 50 50 50  \nNatural Pozzolan \'97 200 \'97 \'97  \nGGBS \'97 \'97 250 \'97  \nLimestone Filler \'97 \'97 \'97 350  ",\
+    "declaration": null,\
+    "allocationRules": null,\
+    "cutOffRules": null,\
+    "calculationMethodology": null,\
+    "systemBoundary": null,\
+    "complete": true,\
+    "isDataPopulated": false,\
+    "convertedStartDate": "2026-06-03T10:11:07",\
+    "convertedEndDate": "2026-06-03T10:11:07",\
+    "unresolvedCommentsCount": null,\
+    "siteId": 405,\
+    "startDate": "2026-06-03T10:11:07.000+00:00",\
+    "endDate": "2026-06-03T10:11:07.000+00:00",\
+    "locked": false,\
+    "declared": false,\
+    "systemUuid": "2606N3Qq",\
+    "runDuration": null,\
+    "comments": null,\
+    "processes": [\
+        \{\
+            "id": 31684,\
+            "title": "Raw Material Preparation",\
+            "description": "Description for Raw Material Preparation",\
+            "siteId": null,\
+            "economicCategorizationCategoryId": 1,\
+            "economicCategorizationSubcategoryId": 1,\
+            "positionX": 400,\
+            "positionY": 261,\
+            "existingItem": true,\
+            "allocationCalculated": false,\
+            "notes": null,\
+            "approved": false,\
+            "totalScopeOne": null,\
+            "totalEmbodiedEmissions": 22.193229117337295125000000000000000000000000000000000000000000000000000000000000000000000000,\
+            "isReady": null,\
+            "inputs": [\
+                \{\
+                    "id": 69547,\
+                    "title": "Limestone",\
+                    "unit": "KG",\
+                    "designation": "Value Chain",\
+                    "carbonIntensity": 0.002337945909047347500000000000000000000000000000000000000000,\
+                    "totalEmbodiedEmissions": 2.454843204499714875000000000000000000000000000000000000000000000000000000000000000000000000,\
+                    "existingItem": true,\
+                    "referenceLibraryId": 43980,\
+                    "conversionRatio": 1.000000000000000000000000000000,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 0,\
+                    "positionY": 101,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 1050.000000000000000000000000000000,\
+                    "notes": "",\
+                    "approved": false,\
+                    "inputType": "Reference Emission Factors",\
+                    "inputDocuments": []\
+                },\
+                \{\
+                    "id": 69548,\
+                    "title": "Clay",\
+                    "unit": "KG",\
+                    "designation": "Value Chain",\
+                    "carbonIntensity": 0.008501543651350321000000000000000000000000000000000000000000,\
+                    "totalEmbodiedEmissions": 2.125385912837580250000000000000000000000000000000000000000000000000000000000000000000000000,\
+                    "existingItem": true,\
+                    "referenceLibraryId": 97023,\
+                    "conversionRatio": 1.000000000000000000000000000000,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 0,\
+                    "positionY": 261,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 250.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "inputType": null,\
+                    "inputDocuments": []\
+                },\
+                \{\
+                    "id": 69549,\
+                    "title": "Electricity - Raw Mill",\
+                    "unit": "kwh",\
+                    "designation": "Utility",\
+                    "carbonIntensity": 0.587100000000000000000000000000000000000000000000000000000000,\
+                    "totalEmbodiedEmissions": 17.613000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,\
+                    "existingItem": true,\
+                    "referenceLibraryId": 101513,\
+                    "conversionRatio": 1.000000000000000000000000000000,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 0,\
+                    "positionY": 421,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 30.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "inputType": null,\
+                    "inputDocuments": []\
+                }\
+            ],\
+            "outputs": [\
+                \{\
+                    "id": 47917,\
+                    "title": "Raw Meal",\
+                    "unit": "KG",\
+                    "existingItem": true,\
+                    "positionX": 800,\
+                    "positionY": 101,\
+                    "distribution": 100.000000000000000000000000000000,\
+                    "amount": 1300.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "carbonIntensity": 0.0170717147,\
+                    "totalEmbodiedEmissions": 22.1932291173372951250000000000000000000000000000000000000000000000000000000000000000000000000000000000,\
+                    "verificationStatus": null,\
+                    "outputUuid": "2606bicQ",\
+                    "outputDocuments": [],\
+                    "verification": null\
+                }\
+            ],\
+            "unspecifiedEmissionGroups": [],\
+            "connections": [],\
+            "processDocuments": []\
+        },\
+        \{\
+            "id": 31685,\
+            "title": "Clinker Production",\
+            "description": "Description for Clinker Production",\
+            "siteId": null,\
+            "economicCategorizationCategoryId": 1,\
+            "economicCategorizationSubcategoryId": 1,\
+            "positionX": 1200,\
+            "positionY": 261,\
+            "existingItem": true,\
+            "allocationCalculated": false,\
+            "notes": null,\
+            "approved": false,\
+            "totalScopeOne": null,\
+            "totalEmbodiedEmissions": null,\
+            "isReady": null,\
+            "inputs": [\
+                \{\
+                    "id": 69550,\
+                    "title": "Heavy Fuel Oil",\
+                    "unit": "KG",\
+                    "designation": "Value Chain",\
+                    "carbonIntensity": 0.681976811967178500000000000000000000000000000000000000000000,\
+                    "totalEmbodiedEmissions": 54.558144957374280000000000000000000000000000000000000000000000000000000000000000000000000000,\
+                    "existingItem": true,\
+                    "referenceLibraryId": 101512,\
+                    "conversionRatio": 1.000000000000000000000000000000,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 800,\
+                    "positionY": 261,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 80.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "inputType": null,\
+                    "inputDocuments": []\
+                },\
+                \{\
+                    "id": 69551,\
+                    "title": "Electricity - Kiln Auxiliaries",\
+                    "unit": "kwh",\
+                    "designation": "Utility",\
+                    "carbonIntensity": 0.587800000000000000000000000000000000000000000000000000000000,\
+                    "totalEmbodiedEmissions": 14.695000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,\
+                    "existingItem": true,\
+                    "referenceLibraryId": 101514,\
+                    "conversionRatio": 1.000000000000000000000000000000,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 800,\
+                    "positionY": 421,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 25.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "inputType": null,\
+                    "inputDocuments": []\
+                }\
+            ],\
+            "outputs": [\
+                \{\
+                    "id": 47918,\
+                    "title": "Clinker",\
+                    "unit": "KG",\
+                    "existingItem": true,\
+                    "positionX": 1600,\
+                    "positionY": 21,\
+                    "distribution": 100.000000000000000000000000000000,\
+                    "amount": 1000.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "carbonIntensity": null,\
+                    "totalEmbodiedEmissions": null,\
+                    "verificationStatus": null,\
+                    "outputUuid": "2606nDtw",\
+                    "outputDocuments": [],\
+                    "verification": null\
+                }\
+            ],\
+            "unspecifiedEmissionGroups": [\
+                \{\
+                    "id": 47713,\
+                    "title": "Combustion of heavy fuel oil \'97 Clinker Production",\
+                    "emissionSource": "Stationary Combustion",\
+                    "calculationSource": "Calculated",\
+                    "referenceLibraryId": 101311,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "emissionFactorQuantity": 253.600000000000000000000000000000,\
+                    "conversionRatio": null,\
+                    "unitId": 187,\
+                    "unitTitle": "KG",\
+                    "positionX": 1200,\
+                    "positionY": 419,\
+                    "approved": false,\
+                    "existingItem": true,\
+                    "carbonIntensity": null,\
+                    "totalEmbodiedEmissions": null\
+                },\
+                \{\
+                    "id": 47714,\
+                    "title": "Calcination CO\uc0\u8322  release \'97 Clinker Production",\
+                    "emissionSource": "Physical or chemical processes",\
+                    "calculationSource": "Calculated",\
+                    "referenceLibraryId": 100780,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "emissionFactorQuantity": 525.000000000000000000000000000000,\
+                    "conversionRatio": 1.000000000000000000000000000000,\
+                    "unitId": 187,\
+                    "unitTitle": "KG",\
+                    "positionX": 1200,\
+                    "positionY": 519,\
+                    "approved": false,\
+                    "existingItem": true,\
+                    "carbonIntensity": 0.944168138242547700000000000000000000000000000000000000000000,\
+                    "totalEmbodiedEmissions": 495.688272577337542500000000000000000000000000000000000000000000000000000000000000000000000000\
+                }\
+            ],\
+            "connections": [],\
+            "processDocuments": []\
+        },\
+        \{\
+            "id": 31686,\
+            "title": "Cement Grinding - CEM I",\
+            "description": "Description for Cement Grinding - CEM I",\
+            "siteId": null,\
+            "economicCategorizationCategoryId": 1,\
+            "economicCategorizationSubcategoryId": 1,\
+            "positionX": 2000,\
+            "positionY": 555,\
+            "existingItem": true,\
+            "allocationCalculated": false,\
+            "notes": null,\
+            "approved": false,\
+            "totalScopeOne": null,\
+            "totalEmbodiedEmissions": null,\
+            "isReady": null,\
+            "inputs": [\
+                \{\
+                    "id": 69552,\
+                    "title": "Gypsum",\
+                    "unit": "KG",\
+                    "designation": "Value Chain",\
+                    "carbonIntensity": 0.002893797491058970000000000000000000000000000000000000000000,\
+                    "totalEmbodiedEmissions": 0.144689874552948500000000000000000000000000000000000000000000000000000000000000000000000000,\
+                    "existingItem": true,\
+                    "referenceLibraryId": 44400,\
+                    "conversionRatio": 1.000000000000000000000000000000,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 1600,\
+                    "positionY": 1161,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 50.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "inputType": null,\
+                    "inputDocuments": []\
+                },\
+                \{\
+                    "id": 69553,\
+                    "title": "Electricity - Cement Mill CEM I",\
+                    "unit": "kwh",\
+                    "designation": "Utility",\
+                    "carbonIntensity": 0.592100000000000000000000000000000000000000000000000000000000,\
+                    "totalEmbodiedEmissions": 32.565500000000000000000000000000000000000000000000000000000000000000000000000000000000000000,\
+                    "existingItem": true,\
+                    "referenceLibraryId": 101515,\
+                    "conversionRatio": 1.000000000000000000000000000000,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 1600,\
+                    "positionY": 1063,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 55.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "inputType": null,\
+                    "inputDocuments": []\
+                }\
+            ],\
+            "outputs": [\
+                \{\
+                    "id": 47919,\
+                    "title": "CEM I (OPC)",\
+                    "unit": "KG",\
+                    "existingItem": true,\
+                    "positionX": 2400,\
+                    "positionY": 555,\
+                    "distribution": 100.000000000000000000000000000000,\
+                    "amount": 1000.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "carbonIntensity": null,\
+                    "totalEmbodiedEmissions": null,\
+                    "verificationStatus": null,\
+                    "outputUuid": "2606aGUE",\
+                    "outputDocuments": [],\
+                    "verification": null\
+                }\
+            ],\
+            "unspecifiedEmissionGroups": [],\
+            "connections": [],\
+            "processDocuments": []\
+        },\
+        \{\
+            "id": 31687,\
+            "title": "Cement Grinding - CEM II/A-V",\
+            "description": "Description for Cement Grinding - CEM II/A-V",\
+            "siteId": null,\
+            "economicCategorizationCategoryId": 1,\
+            "economicCategorizationSubcategoryId": 1,\
+            "positionX": 2000,\
+            "positionY": 457,\
+            "existingItem": true,\
+            "allocationCalculated": false,\
+            "notes": null,\
+            "approved": false,\
+            "totalScopeOne": null,\
+            "totalEmbodiedEmissions": null,\
+            "isReady": null,\
+            "inputs": [\
+                \{\
+                    "id": 69554,\
+                    "title": "Natural Pozzolan",\
+                    "unit": "KG",\
+                    "designation": "Value Chain",\
+                    "carbonIntensity": 0.037500000000000000000000000000000000000000000000000000000000,\
+                    "totalEmbodiedEmissions": 7.500000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,\
+                    "existingItem": true,\
+                    "referenceLibraryId": 101516,\
+                    "conversionRatio": 1.000000000000000000000000000000,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 1600,\
+                    "positionY": 965,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 200.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "inputType": null,\
+                    "inputDocuments": []\
+                },\
+                \{\
+                    "id": 69555,\
+                    "title": "Gypsum - Pozzolana Blend",\
+                    "unit": "KG",\
+                    "designation": "Value Chain",\
+                    "carbonIntensity": null,\
+                    "totalEmbodiedEmissions": null,\
+                    "existingItem": true,\
+                    "referenceLibraryId": null,\
+                    "conversionRatio": null,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 1600,\
+                    "positionY": 867,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 50.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "inputType": null,\
+                    "inputDocuments": []\
+                },\
+                \{\
+                    "id": 69556,\
+                    "title": "Electricity - Cement Mill CEM II-AV",\
+                    "unit": "kwh",\
+                    "designation": "Utility",\
+                    "carbonIntensity": 0.592100000000000000000000000000000000000000000000000000000000,\
+                    "totalEmbodiedEmissions": 32.565500000000000000000000000000000000000000000000000000000000000000000000000000000000000000,\
+                    "existingItem": true,\
+                    "referenceLibraryId": 101517,\
+                    "conversionRatio": 1.000000000000000000000000000000,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 1600,\
+                    "positionY": 769,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 55.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "inputType": null,\
+                    "inputDocuments": []\
+                }\
+            ],\
+            "outputs": [\
+                \{\
+                    "id": 47920,\
+                    "title": "CEM II/A-V (Pozzolana Cement)",\
+                    "unit": "KG",\
+                    "existingItem": true,\
+                    "positionX": 2400,\
+                    "positionY": 457,\
+                    "distribution": 100.000000000000000000000000000000,\
+                    "amount": 1000.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "carbonIntensity": null,\
+                    "totalEmbodiedEmissions": null,\
+                    "verificationStatus": null,\
+                    "outputUuid": "2606uhwO",\
+                    "outputDocuments": [],\
+                    "verification": null\
+                }\
+            ],\
+            "unspecifiedEmissionGroups": [],\
+            "connections": [],\
+            "processDocuments": []\
+        },\
+        \{\
+            "id": 31688,\
+            "title": "Cement Grinding - CEM II/B-S",\
+            "description": "Description for Cement Grinding - CEM II/B-S",\
+            "siteId": null,\
+            "economicCategorizationCategoryId": 1,\
+            "economicCategorizationSubcategoryId": 1,\
+            "positionX": 2000,\
+            "positionY": 359,\
+            "existingItem": true,\
+            "allocationCalculated": false,\
+            "notes": null,\
+            "approved": false,\
+            "totalScopeOne": null,\
+            "totalEmbodiedEmissions": null,\
+            "isReady": null,\
+            "inputs": [\
+                \{\
+                    "id": 69557,\
+                    "title": "GGBS",\
+                    "unit": "KG",\
+                    "designation": "Value Chain",\
+                    "carbonIntensity": 164.400000000000000000000000000000000000000000000000000000000000,\
+                    "totalEmbodiedEmissions": 41100.000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,\
+                    "existingItem": true,\
+                    "referenceLibraryId": 91001,\
+                    "conversionRatio": 1.000000000000000000000000000000,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 1600,\
+                    "positionY": 279,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 250.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "inputType": null,\
+                    "inputDocuments": []\
+                },\
+                \{\
+                    "id": 69558,\
+                    "title": "Gypsum - Slag Blend",\
+                    "unit": "KG",\
+                    "designation": "Value Chain",\
+                    "carbonIntensity": null,\
+                    "totalEmbodiedEmissions": null,\
+                    "existingItem": true,\
+                    "referenceLibraryId": null,\
+                    "conversionRatio": null,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 1600,\
+                    "positionY": 475,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 50.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "inputType": null,\
+                    "inputDocuments": []\
+                },\
+                \{\
+                    "id": 69559,\
+                    "title": "Electricity - Cement Mill CEM II-BS",\
+                    "unit": "kwh",\
+                    "designation": "Utility",\
+                    "carbonIntensity": 0.592100000000000000000000000000000000000000000000000000000000,\
+                    "totalEmbodiedEmissions": 32.565500000000000000000000000000000000000000000000000000000000000000000000000000000000000000,\
+                    "existingItem": true,\
+                    "referenceLibraryId": 101518,\
+                    "conversionRatio": 1.000000000000000000000000000000,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 1600,\
+                    "positionY": 671,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 55.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "inputType": null,\
+                    "inputDocuments": []\
+                }\
+            ],\
+            "outputs": [\
+                \{\
+                    "id": 47921,\
+                    "title": "CEM II/B-S (Slag Cement)",\
+                    "unit": "KG",\
+                    "existingItem": true,\
+                    "positionX": 2400,\
+                    "positionY": 359,\
+                    "distribution": 100.000000000000000000000000000000,\
+                    "amount": 1000.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "carbonIntensity": null,\
+                    "totalEmbodiedEmissions": null,\
+                    "verificationStatus": null,\
+                    "outputUuid": "2606K3K0",\
+                    "outputDocuments": [],\
+                    "verification": null\
+                }\
+            ],\
+            "unspecifiedEmissionGroups": [],\
+            "connections": [],\
+            "processDocuments": []\
+        },\
+        \{\
+            "id": 31689,\
+            "title": "Cement Grinding - Masonry Cement",\
+            "description": "Description for Cement Grinding - Masonry Cement",\
+            "siteId": null,\
+            "economicCategorizationCategoryId": 1,\
+            "economicCategorizationSubcategoryId": 1,\
+            "positionX": 2000,\
+            "positionY": 261,\
+            "existingItem": true,\
+            "allocationCalculated": false,\
+            "notes": null,\
+            "approved": false,\
+            "totalScopeOne": null,\
+            "totalEmbodiedEmissions": null,\
+            "isReady": null,\
+            "inputs": [\
+                \{\
+                    "id": 69560,\
+                    "title": "Limestone Filler",\
+                    "unit": "KG",\
+                    "designation": "Value Chain",\
+                    "carbonIntensity": 0.031700000000000000000000000000000000000000000000000000000000,\
+                    "totalEmbodiedEmissions": 11.095000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,\
+                    "existingItem": true,\
+                    "referenceLibraryId": 101519,\
+                    "conversionRatio": 1.000000000000000000000000000000,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 1600,\
+                    "positionY": 181,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 350.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "inputType": null,\
+                    "inputDocuments": []\
+                },\
+                \{\
+                    "id": 69561,\
+                    "title": "Gypsum - Masonry Blend",\
+                    "unit": "KG",\
+                    "designation": "Value Chain",\
+                    "carbonIntensity": 0.128000000000000000000000000000000000000000000000000000000000,\
+                    "totalEmbodiedEmissions": 6.400000000000000000000000000000000000000000000000000000000000000000000000000000000000000000,\
+                    "existingItem": true,\
+                    "referenceLibraryId": 101520,\
+                    "conversionRatio": 1.000000000000000000000000000000,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 1600,\
+                    "positionY": 377,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 50.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "inputType": null,\
+                    "inputDocuments": []\
+                },\
+                \{\
+                    "id": 69562,\
+                    "title": "Electricity - Cement Mill Masonry",\
+                    "unit": "kwh",\
+                    "designation": "Utility",\
+                    "carbonIntensity": 0.592100000000000000000000000000000000000000000000000000000000,\
+                    "totalEmbodiedEmissions": 32.565500000000000000000000000000000000000000000000000000000000000000000000000000000000000000,\
+                    "existingItem": true,\
+                    "referenceLibraryId": 101521,\
+                    "conversionRatio": 1.000000000000000000000000000000,\
+                    "referenceLibraryIdFromRegistry": null,\
+                    "positionX": 1600,\
+                    "positionY": 573,\
+                    "inventoryId": null,\
+                    "linkedOutputId": null,\
+                    "eacId": null,\
+                    "amount": 55.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "inputType": null,\
+                    "inputDocuments": []\
+                }\
+            ],\
+            "outputs": [\
+                \{\
+                    "id": 47922,\
+                    "title": "Masonry Cement",\
+                    "unit": "KG",\
+                    "existingItem": true,\
+                    "positionX": 2400,\
+                    "positionY": 261,\
+                    "distribution": 100.000000000000000000000000000000,\
+                    "amount": 1000.000000000000000000000000000000,\
+                    "notes": null,\
+                    "approved": false,\
+                    "carbonIntensity": null,\
+                    "totalEmbodiedEmissions": null,\
+                    "verificationStatus": null,\
+                    "outputUuid": "2606c4gO",\
+                    "outputDocuments": [],\
+                    "verification": null\
+                }\
+            ],\
+            "unspecifiedEmissionGroups": [],\
+            "connections": [],\
+            "processDocuments": []\
+        }\
+    ],\
+    "connections": [\
+        \{\
+            "outputId": 47917,\
+            "processId": 31685,\
+            "amount": 1300.000000000000000000000000000000\
+        },\
+        \{\
+            "outputId": 47918,\
+            "processId": 31686,\
+            "amount": 1000.000000000000000000000000000000\
+        },\
+        \{\
+            "outputId": 47918,\
+            "processId": 31687,\
+            "amount": 1000.000000000000000000000000000000\
+        },\
+        \{\
+            "outputId": 47918,\
+            "processId": 31688,\
+            "amount": 1000.000000000000000000000000000000\
+        },\
+        \{\
+            "outputId": 47918,\
+            "processId": 31689,\
+            "amount": 1000.000000000000000000000000000000\
+        }\
+    ]\
+}}
