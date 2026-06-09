@@ -50,6 +50,15 @@ export interface Process {
   processDocuments: any[];
 }
 
+export interface InputAdditionalData {
+  title: string;
+  intensity: number;
+  inputType: string;
+  isPublic: boolean;
+  attestationBy: string;
+  attestationCompany: string;
+}
+
 export interface Input {
   id: number;
   title: string;
@@ -71,6 +80,7 @@ export interface Input {
   approved: boolean;
   inputType: string | null;
   inputDocuments: any[];
+  inputAdditionalData?: InputAdditionalData;
 }
 
 export interface Output {

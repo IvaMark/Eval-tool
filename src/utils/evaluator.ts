@@ -102,7 +102,16 @@ export class CarbonSigEvaluator {
 
         // Check for public EF (LCI)
         if (input.referenceLibraryId !== null) {
-          const isPublic = isPublicEF(input.referenceLibraryId);
+          let isPublic: boolean;
+
+          // Check if inputAdditionalData.isPublic exists (new structure)
+          if (input.inputAdditionalData && input.inputAdditionalData.isPublic !== undefined) {
+            // INVERTED LOGIC: isPublic: true means INTERNAL (not public), false means PUBLIC
+            isPublic = !input.inputAdditionalData.isPublic;
+          } else {
+            // Fall back to old method: check against internal ID list
+            isPublic = isPublicEF(input.referenceLibraryId);
+          }
 
           // Only count truly public EFs (not internal)
           if (isPublic) {
