@@ -3,12 +3,15 @@ import type {
   Input,
   Output,
   UnspecifiedEmissionGroup,
+  Process,
 } from '../types/carbonsig';
 import type {
   NodeAnalysis,
   UnpopulatedNode,
   MissingField,
   PublicEFItem,
+  NodeNotInDescription,
+  DescriptionMismatch,
   EvalDimension,
   EvaluationReport,
   EvalScore,
@@ -203,6 +206,9 @@ export class CarbonSigEvaluator {
 
     const totalNodes = totalInputs + totalOutputs + totalDirectEmissions;
 
+    // Analyze description alignment
+    const descriptionAnalysis = this.analyzeDescriptionAlignment();
+
     return {
       totalProcesses: this.system.processes.length,
       totalInputs,
@@ -220,7 +226,160 @@ export class CarbonSigEvaluator {
       unpopulatedNodesList,
       missingFieldsList,
       publicEFList,
+      nodesNotInDescription: descriptionAnalysis.nodesNotInDescription,
+      descriptionMismatches: descriptionAnalysis.descriptionMismatches,
     };
+  }
+
+  /**
+   * Analyze description alignment - check if nodes are mentioned in description
+   * and if amounts/units match what's mentioned
+   */
+  private analyzeDescriptionAlignment(): {
+    nodesNotInDescription: NodeNotInDescription[];
+    descriptionMismatches: DescriptionMismatch[];
+  } {
+    const nodesNotInDescription: NodeNotInDescription[] = [];
+    const descriptionMismatches: DescriptionMismatch[] = [];
+
+    const description = (this.system.description || '').toLowerCase();
+
+    if (!description || description.trim().length === 0) {
+      // No description to compare against
+      return { nodesNotInDescription, descriptionMismatches };
+    }
+
+    // Check all nodes against description
+    for (const process of this.system.processes) {
+      // Check inputs
+      for (const input of process.inputs) {
+        const titleWords = input.title.toLowerCase().split(/\s+/);
+        const keyWords = titleWords.filter(w => w.length > 3); // Filter out short words like "the", "and"
+
+        // Check if any significant word from the title appears in description
+        const mentionedInDesc = keyWords.some(word => description.includes(word));
+
+        if (!mentionedInDesc && keyWords.length > 0) {
+          nodesNotInDescription.push({
+            type: 'input',
+            processId: process.id,
+            processTitle: process.title,
+            nodeId: input.id,
+            nodeTitle: input.title,
+            reason: 'Not mentioned in system description',
+          });
+        } else {
+          // Check for amount/unit mismatches if mentioned
+          const mismatch = this.checkDescriptionMismatch(input, process, description);
+          if (mismatch) {
+            descriptionMismatches.push(mismatch);
+          }
+        }
+      }
+
+      // Check outputs
+      for (const output of process.outputs) {
+        const titleWords = output.title.toLowerCase().split(/\s+/);
+        const keyWords = titleWords.filter(w => w.length > 3);
+
+        const mentionedInDesc = keyWords.some(word => description.includes(word));
+
+        if (!mentionedInDesc && keyWords.length > 0) {
+          nodesNotInDescription.push({
+            type: 'output',
+            processId: process.id,
+            processTitle: process.title,
+            nodeId: output.id,
+            nodeTitle: output.title,
+            reason: 'Not mentioned in system description',
+          });
+        }
+      }
+
+      // Check direct emissions
+      for (const emission of process.unspecifiedEmissionGroups) {
+        const titleWords = emission.title.toLowerCase().split(/\s+/);
+        const keyWords = titleWords.filter(w => w.length > 3);
+
+        const mentionedInDesc = keyWords.some(word => description.includes(word));
+
+        if (!mentionedInDesc && keyWords.length > 0) {
+          nodesNotInDescription.push({
+            type: 'directEmission',
+            processId: process.id,
+            processTitle: process.title,
+            nodeId: emission.id,
+            nodeTitle: emission.title,
+            reason: 'Not mentioned in system description',
+          });
+        }
+      }
+    }
+
+    return { nodesNotInDescription, descriptionMismatches };
+  }
+
+  /**
+   * Check if input's amount/unit matches what's in description
+   */
+  private checkDescriptionMismatch(
+    input: Input,
+    process: Process,
+    description: string
+  ): DescriptionMismatch | null {
+    // Extract patterns like "1,050 kg limestone" or "250 kg clay"
+    const inputName = input.title.toLowerCase();
+
+    // Look for patterns: number + unit + material name
+    // Example: "1,050 kg limestone", "80 kg HFO", "110 kWh"
+    const pattern = new RegExp(`([\\d,\\.]+)\\s*(kg|kwh|kw|ton|tonne|g|mg|l|m3|m2)\\s+[\\w\\s]*${inputName.split(' ')[0]}`, 'gi');
+    const matches = description.match(pattern);
+
+    if (matches && matches.length > 0) {
+      const match = matches[0];
+      const amountMatch = match.match(/[\d,\.]+/);
+      const unitMatch = match.match(/kg|kwh|kw|ton|tonne|g|mg|l|m3|m2/i);
+
+      if (amountMatch && unitMatch) {
+        const descAmount = parseFloat(amountMatch[0].replace(/,/g, ''));
+        const descUnit = unitMatch[0].toLowerCase();
+        const actualUnit = (input.unit || '').toLowerCase();
+
+        // Check unit mismatch
+        if (descUnit && actualUnit && descUnit !== actualUnit) {
+          return {
+            processId: process.id,
+            processTitle: process.title,
+            nodeId: input.id,
+            nodeTitle: input.title,
+            field: 'unit',
+            expected: descUnit,
+            actual: actualUnit,
+            descriptionMention: match,
+          };
+        }
+
+        // Check amount mismatch (allow 10% tolerance)
+        if (!isNaN(descAmount) && input.amount !== null) {
+          const tolerance = 0.1;
+          const diff = Math.abs(descAmount - input.amount) / descAmount;
+          if (diff > tolerance) {
+            return {
+              processId: process.id,
+              processTitle: process.title,
+              nodeId: input.id,
+              nodeTitle: input.title,
+              field: 'amount',
+              expected: descAmount.toString(),
+              actual: input.amount.toString(),
+              descriptionMention: match,
+            };
+          }
+        }
+      }
+    }
+
+    return null;
   }
 
   /**
@@ -318,16 +477,13 @@ export class CarbonSigEvaluator {
   }
 
   /**
-   * Evaluate D1-D8 criteria
+   * Evaluate D1, D2, D3, D7, D8 criteria (D4, D5, D6 removed)
    */
   private evaluateDimensions(nodeAnalysis: NodeAnalysis): EvalDimension[] {
     return [
       this.evaluateD1(),
       this.evaluateD2(nodeAnalysis),
       this.evaluateD3(nodeAnalysis),
-      this.evaluateD4(),
-      this.evaluateD5(),
-      this.evaluateD6(),
       this.evaluateD7(nodeAnalysis),
       this.evaluateD8(),
     ];
@@ -426,17 +582,19 @@ export class CarbonSigEvaluator {
       targetScore: EVAL_DIMENSIONS.D2.targetScore,
       actualScore: score,
       details: details.join('\n'),
-      passed: score >= MINIMUM_THRESHOLDS.D1_D5_MIN,
+      passed: score >= MINIMUM_THRESHOLDS.D1_D3_MIN,
     };
   }
 
   /**
-   * D3 - Completeness
+   * D3 - Description Alignment & Completeness (Combined with old D4)
+   * Checks if inputs match description (amounts, units) and overall completeness
    */
   private evaluateD3(nodeAnalysis: NodeAnalysis): EvalDimension {
     let score: EvalScore = 5;
     const details: string[] = [];
 
+    // 1. Completeness check
     const totalNodes = nodeAnalysis.totalNodes;
     const unpopulatedTotal =
       nodeAnalysis.unpopulatedInputs +
@@ -447,28 +605,39 @@ export class CarbonSigEvaluator {
 
     details.push(`Overall completeness: ${completeness.toFixed(1)}%`);
     details.push(`Unpopulated nodes: ${unpopulatedTotal}/${totalNodes}`);
-    details.push(`- Inputs: ${nodeAnalysis.unpopulatedInputs}/${nodeAnalysis.totalInputs}`);
-    details.push(`- Outputs: ${nodeAnalysis.unpopulatedOutputs}/${nodeAnalysis.totalOutputs}`);
-    details.push(`- Direct Emissions: ${nodeAnalysis.unpopulatedDirectEmissions}/${nodeAnalysis.totalDirectEmissions}`);
 
-    if (completeness >= 95) {
-      score = 5;
-      details.push('✓ Excellent completeness');
-    } else if (completeness >= 80) {
-      score = 4;
-      details.push('✓ Good completeness');
+    // 2. Description alignment check
+    const mismatches = nodeAnalysis.descriptionMismatches.length;
+    if (mismatches > 0) {
+      details.push(`\n⚠ Description mismatches found: ${mismatches}`);
+      for (const mismatch of nodeAnalysis.descriptionMismatches.slice(0, 5)) {
+        details.push(`  • ${mismatch.nodeTitle}: ${mismatch.field} (expected: ${mismatch.expected}, actual: ${mismatch.actual})`);
+      }
+      if (nodeAnalysis.descriptionMismatches.length > 5) {
+        details.push(`  ... and ${nodeAnalysis.descriptionMismatches.length - 5} more`);
+      }
+      score = Math.min(score, 3) as EvalScore;
+    } else {
+      details.push('\n✓ All inputs align with description');
+    }
+
+    // 3. Score based on completeness
+    if (completeness >= 95 && mismatches === 0) {
+      score = Math.min(score, 5) as EvalScore;
+      details.push('✓ Excellent completeness and alignment');
+    } else if (completeness >= 80 && mismatches <= 2) {
+      score = Math.min(score, 4) as EvalScore;
+      details.push('✓ Good completeness with minor issues');
     } else if (completeness >= 60) {
-      score = 3;
+      score = Math.min(score, 3) as EvalScore;
       details.push('⚠ Acceptable completeness');
     } else if (completeness >= 40) {
-      score = 2;
+      score = Math.min(score, 2) as EvalScore;
       details.push('✗ Poor completeness');
     } else {
       score = 1;
       details.push('✗ Very poor completeness');
     }
-
-    details.push(`Missing fields detected: ${nodeAnalysis.missingFieldsList.length} nodes`);
 
     return {
       dimension: EVAL_DIMENSIONS.D3.dimension,
@@ -477,84 +646,55 @@ export class CarbonSigEvaluator {
       targetScore: EVAL_DIMENSIONS.D3.targetScore,
       actualScore: score,
       details: details.join('\n'),
-      passed: score >= MINIMUM_THRESHOLDS.D1_D5_MIN,
+      passed: score >= MINIMUM_THRESHOLDS.D1_D3_MIN,
     };
   }
 
   /**
-   * D4 - Boundary & Edge Case Handling (requires manual testing)
+   * D7 - Hallucination Control (Updated)
+   * Flags nodes (inputs/outputs/emissions) NOT mentioned in description
    */
-  private evaluateD4(): EvalDimension {
-    const score: EvalScore = 4; // Default, needs manual testing
-    const details = 'This dimension requires manual testing with edge cases (Unicode, large BOMs, etc.)';
-
-    return {
-      dimension: EVAL_DIMENSIONS.D4.dimension,
-      code: EVAL_DIMENSIONS.D4.code,
-      description: EVAL_DIMENSIONS.D4.description,
-      targetScore: EVAL_DIMENSIONS.D4.targetScore,
-      actualScore: score,
-      details,
-      passed: score >= MINIMUM_THRESHOLDS.D1_D5_MIN,
-    };
-  }
-
-  /**
-   * D5 - Consistency (requires multiple runs comparison)
-   */
-  private evaluateD5(): EvalDimension {
-    const score: EvalScore = 4; // Default, needs multiple runs
-    const details = 'This dimension requires comparing multiple runs with the same input';
-
-    return {
-      dimension: EVAL_DIMENSIONS.D5.dimension,
-      code: EVAL_DIMENSIONS.D5.code,
-      description: EVAL_DIMENSIONS.D5.description,
-      targetScore: EVAL_DIMENSIONS.D5.targetScore,
-      actualScore: score,
-      details,
-      passed: score >= MINIMUM_THRESHOLDS.D1_D5_MIN,
-    };
-  }
-
-  /**
-   * D6 - Latency & Token Efficiency
-   */
-  private evaluateD6(): EvalDimension {
-    const score: EvalScore = 4;
+  private evaluateD7(nodeAnalysis: NodeAnalysis): EvalDimension {
+    let score: EvalScore = 5;
     const details: string[] = [];
 
-    const processCount = this.system.processes.length;
-    const totalNodes = this.system.processes.reduce(
-      (sum, p) => sum + p.inputs.length + p.outputs.length + p.unspecifiedEmissionGroups.length,
-      0
-    );
+    // 1. Check for nodes not mentioned in description
+    const nodesNotInDesc = nodeAnalysis.nodesNotInDescription.length;
+    const totalNodes = nodeAnalysis.totalNodes;
 
-    details.push(`Processes: ${processCount}`);
-    details.push(`Total nodes: ${totalNodes}`);
-    details.push('Token efficiency assessment requires API metrics');
+    if (nodesNotInDesc === 0) {
+      details.push('✓ All nodes are mentioned in description');
+      score = 5;
+    } else {
+      const percentage = (nodesNotInDesc / totalNodes) * 100;
+      details.push(`⚠ Nodes NOT in description: ${nodesNotInDesc}/${totalNodes} (${percentage.toFixed(1)}%)`);
 
-    return {
-      dimension: EVAL_DIMENSIONS.D6.dimension,
-      code: EVAL_DIMENSIONS.D6.code,
-      description: EVAL_DIMENSIONS.D6.description,
-      targetScore: EVAL_DIMENSIONS.D6.targetScore,
-      actualScore: score,
-      details: details.join('\n'),
-      passed: true,
-    };
-  }
+      // Show first 5 examples
+      for (const node of nodeAnalysis.nodesNotInDescription.slice(0, 5)) {
+        details.push(`  • ${node.type}: ${node.nodeTitle} (Process: ${node.processTitle})`);
+      }
+      if (nodeAnalysis.nodesNotInDescription.length > 5) {
+        details.push(`  ... and ${nodeAnalysis.nodesNotInDescription.length - 5} more`);
+      }
 
-  /**
-   * D7 - Hallucination Control
-   */
-  private evaluateD7(_nodeAnalysis: NodeAnalysis): EvalDimension {
-    let score: EvalScore = 4;
-    const details: string[] = [];
+      // Score based on percentage of hallucinated nodes
+      if (percentage <= 10) {
+        score = 4;
+        details.push('⚠ Minor hallucinations detected');
+      } else if (percentage <= 25) {
+        score = 3;
+        details.push('⚠ Moderate hallucinations detected');
+      } else if (percentage <= 50) {
+        score = 2;
+        details.push('✗ Significant hallucinations detected');
+      } else {
+        score = 1;
+        details.push('✗ Severe hallucinations detected');
+      }
+    }
 
-    // Check for suspiciously high or invalid values
+    // 2. Check for suspiciously invalid values
     const suspiciousValues: string[] = [];
-
     for (const process of this.system.processes) {
       for (const input of process.inputs) {
         if (input.carbonIntensity !== null && input.carbonIntensity < 0) {
@@ -566,15 +706,11 @@ export class CarbonSigEvaluator {
       }
     }
 
-    if (suspiciousValues.length === 0) {
-      details.push('✓ No suspicious values detected');
-    } else {
+    if (suspiciousValues.length > 0) {
       score = Math.min(score, 2) as EvalScore;
-      details.push(`✗ Found ${suspiciousValues.length} suspicious values`);
-      details.push(...suspiciousValues.slice(0, 5));
+      details.push(`\n✗ Found ${suspiciousValues.length} suspicious values:`);
+      details.push(...suspiciousValues.slice(0, 3));
     }
-
-    details.push('Full hallucination check requires comparing against BoM/description');
 
     return {
       dimension: EVAL_DIMENSIONS.D7.dimension,
@@ -625,7 +761,7 @@ export class CarbonSigEvaluator {
       targetScore: EVAL_DIMENSIONS.D8.targetScore,
       actualScore: score,
       details: details.join('\n'),
-      passed: score >= MINIMUM_THRESHOLDS.D1_D5_MIN,
+      passed: score >= MINIMUM_THRESHOLDS.D1_D3_MIN,
     };
   }
 
