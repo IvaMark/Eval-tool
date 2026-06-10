@@ -67,8 +67,9 @@ export class CarbonSigEvaluator {
     let unpopulatedOutputs = 0;
     let populatedDirectEmissions = 0;
     let unpopulatedDirectEmissions = 0;
-    let inputsWithPublicEF = 0;
-    let inputsWithoutEF = 0;
+    let inputsWithEF = 0; // Any EF (public or internal)
+    let directEmissionsWithEF = 0; // Direct emissions with referenceLibraryId
+    let inputsWithPublicEF = 0; // For the public EF table
 
     for (const process of this.system.processes) {
       // Analyze Inputs
@@ -103,8 +104,11 @@ export class CarbonSigEvaluator {
           });
         }
 
-        // Check for public EF (LCI)
+        // Check for EF (any - public or internal)
         if (input.referenceLibraryId !== null) {
+          // Count ANY EF for D2 calculation
+          inputsWithEF++;
+
           let isPublic: boolean;
 
           // Check if inputAdditionalData.isPublic exists (new structure)
@@ -116,7 +120,7 @@ export class CarbonSigEvaluator {
             isPublic = isPublicEF(input.referenceLibraryId);
           }
 
-          // Only count truly public EFs (not internal)
+          // Count public EFs for the public EF table
           if (isPublic) {
             inputsWithPublicEF++;
           }
@@ -132,8 +136,6 @@ export class CarbonSigEvaluator {
             carbonIntensity: input.carbonIntensity,
             isPublic: isPublic,
           });
-        } else {
-          inputsWithoutEF++;
         }
       }
 
@@ -201,6 +203,11 @@ export class CarbonSigEvaluator {
             missingFields: missing,
           });
         }
+
+        // Check for EF in direct emissions
+        if (emission.referenceLibraryId !== null) {
+          directEmissionsWithEF++;
+        }
       }
     }
 
@@ -221,8 +228,9 @@ export class CarbonSigEvaluator {
       unpopulatedOutputs,
       populatedDirectEmissions,
       unpopulatedDirectEmissions,
+      inputsWithEF,
+      directEmissionsWithEF,
       inputsWithPublicEF,
-      inputsWithoutEF,
       unpopulatedNodesList,
       missingFieldsList,
       publicEFList,
@@ -446,7 +454,20 @@ export class CarbonSigEvaluator {
   ): string[] {
     const missing: string[] = [];
 
-    // Common fields
+    // Direct emissions have different validation (only 3 specific fields)
+    if (type === 'directEmission') {
+      const emission = node as UnspecifiedEmissionGroup;
+      if (!emission.unitTitle) missing.push('unitTitle');
+      if (emission.emissionFactorQuantity === null || emission.emissionFactorQuantity === undefined) {
+        missing.push('emissionFactorQuantity');
+      }
+      if (emission.conversionRatio === null || emission.conversionRatio === undefined) {
+        missing.push('conversionRatio');
+      }
+      return missing;
+    }
+
+    // Common fields for inputs and outputs
     if (!node.title || node.title.trim() === '') missing.push('title');
     if (node.carbonIntensity === null) missing.push('carbonIntensity');
     if (node.totalEmbodiedEmissions === null) missing.push('totalEmbodiedEmissions');
@@ -462,15 +483,6 @@ export class CarbonSigEvaluator {
       const output = node as Output;
       if (!output.unit) missing.push('unit');
       if (output.amount === null || output.amount === undefined) missing.push('amount');
-    } else if (type === 'directEmission') {
-      const emission = node as UnspecifiedEmissionGroup;
-      if (!emission.emissionSource) missing.push('emissionSource');
-      if (emission.emissionFactorQuantity === null || emission.emissionFactorQuantity === undefined) {
-        missing.push('emissionFactorQuantity');
-      }
-      if (emission.conversionRatio === null || emission.conversionRatio === undefined) {
-        missing.push('conversionRatio');
-      }
     }
 
     return missing;
@@ -545,20 +557,29 @@ export class CarbonSigEvaluator {
 
   /**
    * D2 - Semantic Correctness
+   * Calculate EF coverage for ALL EFs (public + internal) in inputs and direct emissions
    */
   private evaluateD2(nodeAnalysis: NodeAnalysis): EvalDimension {
     let score: EvalScore = 4;
     const details: string[] = [];
 
-    // Check if inputs have appropriate LCI/EF
-    const inputsWithEF = nodeAnalysis.inputsWithPublicEF;
+    // Calculate EF coverage: (inputs + direct emissions with EF) / (total inputs + total direct emissions)
+    const inputsWithEF = nodeAnalysis.inputsWithEF;
+    const directEmissionsWithEF = nodeAnalysis.directEmissionsWithEF;
     const totalInputs = nodeAnalysis.totalInputs;
+    const totalDirectEmissions = nodeAnalysis.totalDirectEmissions;
 
-    if (totalInputs > 0) {
-      const efCoverage = (inputsWithEF / totalInputs) * 100;
-      details.push(`EF coverage: ${efCoverage.toFixed(1)}% (${inputsWithEF}/${totalInputs} inputs)`);
+    const totalNodesNeedingEF = totalInputs + totalDirectEmissions;
+    const totalNodesWithEF = inputsWithEF + directEmissionsWithEF;
+
+    if (totalNodesNeedingEF > 0) {
+      const efCoverage = (totalNodesWithEF / totalNodesNeedingEF) * 100;
+      details.push(`EF coverage: ${efCoverage.toFixed(1)}% (${totalNodesWithEF}/${totalNodesNeedingEF} nodes)`);
+      details.push(`  - Inputs with EF: ${inputsWithEF}/${totalInputs}`);
+      details.push(`  - Direct emissions with EF: ${directEmissionsWithEF}/${totalDirectEmissions}`);
 
       if (efCoverage >= 80) {
+        score = 4;
         details.push('✓ Good EF coverage');
       } else if (efCoverage >= 50) {
         score = 3;
@@ -567,12 +588,14 @@ export class CarbonSigEvaluator {
         score = 2;
         details.push('✗ Low EF coverage');
       }
+    } else {
+      details.push('No inputs or direct emissions requiring EF');
     }
 
     // Check if process titles are meaningful
     const processes = this.system.processes;
     if (processes.length > 0) {
-      details.push(`✓ ${processes.length} processes defined`);
+      details.push(`\n✓ ${processes.length} processes defined`);
     }
 
     return {

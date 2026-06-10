@@ -26,8 +26,9 @@ export interface NodeAnalysis {
   populatedDirectEmissions: number;
   unpopulatedDirectEmissions: number;
 
-  inputsWithPublicEF: number;
-  inputsWithoutEF: number;
+  inputsWithEF: number; // Inputs with referenceLibraryId (any EF)
+  directEmissionsWithEF: number; // Direct emissions with referenceLibraryId
+  inputsWithPublicEF: number; // For the public EF table
 
   unpopulatedNodesList: UnpopulatedNode[];
   missingFieldsList: MissingField[];
